@@ -47,9 +47,18 @@ getData(Data) :- p_day(Day), fileForDay(Day, 'data', File), loadData(Data, File,
 getData(_) :- writeln('Error: Could not load puzzle data'), halt(5).
 checkLoadError([]) :- !.
 checkLoadError(Error) :- format('Error: ~w', [Error]), halt(6).
-executePuzzle(Data) :- p_result(Data, Result), !, (p_hideResult -> FormattedResult = "" ; white(Result, FormattedResult)), format('Result is ~w', [FormattedResult]), p_finalize(Result).
+executePuzzle(Data) :- p_result(Data, Result), !, write('Result is '), p_formatResult(Result, FormattedResult), writeResult(FormattedResult), p_finalize(Result).
 executePuzzle(_) :- writeln('Error: could find result for puzzle data'), halt(7).
 
+writeFirstResultLine(ResultLine, 0) :- p_notInlineResult, !, writeln(""), white(ResultLine, WhiteResultLine), write(WhiteResultLine).
+writeFirstResultLine(ResultLine, StartPos) :- cursorPosition(StartPos), white(ResultLine, WhiteResultLine), write(WhiteResultLine).
+writeOtherResultLine(StartPos, ResultLine) :- writeln(""), Move is StartPos - 1, moveCursor(Move, right), white(ResultLine, WhiteResultLine), write(WhiteResultLine).
+writeResult(_) :- p_hideResult, !.
+writeResult(Result) :- string(Result), !, split_string(Result, "\n", "", Lines), writeResult(Lines). /* split multiline result to list and print as aligned list */
+writeResult([SingleLine]) :- !, white(SingleLine, WhiteResult), write(WhiteResult).
+writeResult([FirstLine|OtherLines]) :- !, writeFirstResultLine(FirstLine, StartPos), foreach(member(Line, OtherLines), writeOtherResultLine(StartPos, Line)).
+writeResult(Result) :- white(Result, WhiteResult), write(WhiteResult).
+  
 testResult_(File, ExpectedResult) :- p_testResult(ExpectedResult), p_day(Day), fileForDay(Day, 'test', File).
 testResult_(File, ExpectedResult) :- p_testResult(Extension, ExpectedResult), p_day(Day), format(atom(File), 'input/~w.~w', [Day, Extension]).
 findTests(Tests) :- findall([File, ExpectedResult], testResult_(File, ExpectedResult), Tests).
@@ -70,7 +79,40 @@ checkTestLoadError(Error) :- testFailed(Status), format('[~w] ~w', [Status, Erro
 executeTest(File, TestData, ExpectedResult) :- p_result(TestData, TestResult), !, verifyResult(File, TestResult, ExpectedResult).
 executeTest(File, _, _) :- testFailed(Status), format('[~w] No solution for test data ~w found', [Status, File]), halt(3).
 verifyResult(_, TestResult, TestResult) :- !.
-verifyResult(File, WrongResult, ExpectedResult) :- testFailed(Status), format("[~w] Test ~w returned ~w instead of ~w", [Status, File, WrongResult, ExpectedResult]), halt(4).
+verifyResult(File, WrongResult, ExpectedResult) :- testFailed(Status), format("[~w] Test ~w returned ", [Status, File]), writeErrorResults(ExpectedResult, WrongResult), halt(4).
+
+writeDiffChar(Expected, Expected) :- write(Expected), !.
+writeDiffChar(missing, Expected) :- !, redbg(Expected, C), write(C).
+writeDiffChar(Wrong, missing) :- !, greenbg(Wrong, C), write(C).
+writeDiffChar(Wrong, _) :- yellowbg(Wrong, C), write(C).
+writeDiffLine([], []).
+writeDiffLine([], [ExpectedC1|ExpectedCs]) :- writeDiffChar(missing, ExpectedC1), writeDiffLine([], ExpectedCs).
+writeDiffLine([WrongC1|WrongCs], []) :- writeDiffChar(WrongC1, missing), writeDiffLine(WrongCs, []).
+writeDiffLine([WrongC1|WrongCs], [ExpectedC1|ExpectedCs]) :- writeDiffChar(WrongC1, ExpectedC1), writeDiffLine(WrongCs, ExpectedCs).
+writeDiffLineBreak([], []) :- !. writeDiffLineBreak(_, _) :- writeln("").
+writeDiff(_, [], []).
+writeDiff(StartPos, [], [ExpectedLine1|ExpectedLines]) :-
+  moveCursor(StartPos, right), string_chars(ExpectedLine1, ExpectedChars1),
+  writeDiffLine([], ExpectedChars1), writeDiffLineBreak([], ExpectedLines),
+  writeDiff(StartPos, [], ExpectedLines).
+writeDiff(StartPos, [WrongLine1|WrongLines], []) :-
+  moveCursor(StartPos, right), string_chars(WrongLine1, WrongChars1),
+  writeDiffLine(WrongChars1, []), writeDiffLineBreak(WrongLines, []),
+  writeDiff(StartPos, WrongLines, []).
+writeDiff(StartPos, [WrongLine1|WrongLines], [ExpectedLine1|ExpectedLines]) :-
+  moveCursor(StartPos, right), string_chars(WrongLine1, WrongChars1), string_chars(ExpectedLine1, ExpectedChars1),
+  writeDiffLine(WrongChars1, ExpectedChars1), writeDiffLineBreak(WrongLines, ExpectedLines),
+  writeDiff(StartPos, WrongLines, ExpectedLines).
+cursorForDiff(StartPos) :- p_inlineWrongResult, !, cursorPosition(CurPos), StartPos is CurPos - 1, moveCursor(StartPos, left).
+cursorForDiff(0) :- writeln("").
+writeWrongResult(ExpectedResult, WrongResult) :-
+  is_list(WrongResult), is_list(ExpectedResult), !, (isAnsiXterm -> DiffResult = ExpectedResult ; DiffResult = WrongResult),
+  cursorForDiff(StartPos), writeDiff(StartPos, WrongResult, DiffResult), (p_inlineWrongResult -> write(" ") ; writeln("")).
+writeWrongResult(_, WrongResult) :- write(WrongResult), write(" ").
+writeExpectedResult(ExpectedResult, WrongResult) :- is_list(WrongResult), is_list(ExpectedResult), !, cursorForDiff(StartPos), writeDiff(StartPos, ExpectedResult, ExpectedResult).
+writeExpectedResult(ExpectedResult, _) :- write(ExpectedResult).
+writeErrorResults(ExpectedResult, WrongResult) :- p_hideExpectedResultForDiff, cursorForDiff(StartPos), writeDiff(StartPos, WrongResult, ExpectedResult), !.
+writeErrorResults(ExpectedResult, WrongResult) :- writeWrongResult(ExpectedResult, WrongResult), write("instead of "), writeExpectedResult(ExpectedResult, WrongResult).
 
 noTests(Text) :-    green('NO TESTS FOUND', Text).
 testPassed(Text) :- green(' TEST  PASSED ', Text).
@@ -86,6 +128,13 @@ yellow(Text, ColoredText) :- isAnsiXterm, !, format(atom(ColoredText), '\033[0;3
 yellow(Text, Text).
 white(Text, ColoredText) :- isAnsiXterm, !, format(atom(ColoredText), '\033[1;37m~w\033[0m', [Text]).
 white(Text, Text).
+
+greenbg(Text, ColoredText) :- isAnsiXterm, !, format(atom(ColoredText), '\033[30m\033[42m~w\033[0m', [Text]).
+greenbg(Text, Text).
+redbg(Text, ColoredText) :- isAnsiXterm, !, format(atom(ColoredText), '\033[30m\033[41m~w\033[0m', [Text]).
+redbg(Text, Text).
+yellowbg(Text, ColoredText) :- isAnsiXterm, !, format(atom(ColoredText), '\033[30m\033[43m~w\033[0m', [Text]).
+yellowbg(Text, Text).
 
 moveCursor(Distance, Direction) :- isAnsiXterm -> moveCursor_(Distance, Direction) ; true.
 moveCursor_(0, _) :- !.
@@ -125,8 +174,12 @@ p_day(Day) :- day(Day).
 p_resetData :- current_predicate(resetData/0) -> resetData ; true.
 p_data_line(Data, Line) :- data_line(Data, Line).
 p_result(Data, Result) :- result(Data, Result).
+p_formatResult(Result, FormattedResult) :- current_predicate(formatResult/2), !, formatResult(Result, FormattedResult). p_formatResult(Result, Result).
 p_testResult(ExpectedResult) :- current_predicate(testResult/1), testResult(ExpectedResult).
 p_testResult(Extension, ExpectedResult) :- current_predicate(testResult/2), testResult(Extension, ExpectedResult).
 p_finalize(Result) :- current_predicate(finalize/1) -> finalize(Result) ; true.
 p_initDynamicTests :- current_predicate(initDynamicTests/0) -> initDynamicTests ; true.
 p_hideResult :- current_predicate(hideResult/0).
+p_notInlineResult :- \+ isAnsiXterm. p_notInlineResult :- current_predicate(notInlineResult/0).
+p_inlineWrongResult :- isAnsiXterm, current_predicate(inlineWrongResult/0) ; \+ p_notInlineResult, p_hideExpectedResultForDiff.
+p_hideExpectedResultForDiff :- isAnsiXterm, current_predicate(hideExpectedResultForDiff/0).

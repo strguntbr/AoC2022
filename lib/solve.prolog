@@ -24,7 +24,8 @@ loadTestData(Data) :- p_day(Day), fileForDay(Day, 'test', File), loadData(Data, 
 
 fileForDay(Day, Extension, File) :- format(atom(File), 'input/~w.~w', [Day, Extension]).
 
-data_lines(Data, Lines) :- maplist(p_data_line, Data, Lines).
+notIgnored(X) :- X \== ignore.
+data_lines(Data, Lines) :- maplist(p_data_line, RawData, Lines), include(notIgnored, RawData, Data).
 
 groupLines([""], [[]]) :- !.
 groupLines([Line1], [[Line1]]) :- !.

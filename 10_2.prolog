@@ -1,3 +1,4 @@
+:- use_module(library(clpfd)).
 :- include('lib/solve.prolog'). day(10).
 testResult(["##..##..##..##..##..##..##..##..##..##..",
             "###...###...###...###...###...###...###.",
@@ -33,12 +34,17 @@ screen(RawScreen, Screen) :- maplist(line, RawScreen, Screen).
 result(RawInstructions, Screen) :-
   flattenInstructions(RawInstructions, Instructions),
   processLines(Instructions, 1, RawScreen),
-  screen(RawScreen, Screen)/*, concatLines(ScreenLines, Screen)*/.
+  screen(RawScreen, Screen).
 
 /* required for loadData */
 data_line(noop, "noop").
 data_line(add{v: V}, Line) :- split_string(Line, " ", "", ["addx", Value]), number_string(V, Value).
 
-formatLine(Line, FormattedLine) :- re_replace("\\."/g, " ", Line, T), re_replace("#"/g, "█", T, FormattedLine).
+/* formatting / parsing of result */
+:- include('lib/screen.prolog').
+formatResult(ScreenLines, Text) :- maplist(string_chars, ScreenLines, Screen), string_screen(Text, Screen), !.
+
+/* fallback for missing letters */
 formatResult([], []).
 formatResult([Line|OtherLines], [FormattedLine|OtherFormattedLines]) :- formatLine(Line, FormattedLine), formatResult(OtherLines, OtherFormattedLines).
+formatLine(Line, FormattedLine) :- re_replace("\\."/g, " ", Line, T), re_replace("#"/g, "█", T, FormattedLine).

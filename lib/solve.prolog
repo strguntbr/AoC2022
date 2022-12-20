@@ -49,7 +49,7 @@ getData(_) :- writeln('Error: Could not load puzzle data'), halt(5).
 checkLoadError([]) :- !.
 checkLoadError(Error) :- format('Error: ~w', [Error]), halt(6).
 executePuzzle(Data) :- p_result(Data, Result), !, write('Result is '), p_formatResult(Result, FormattedResult), writeResult(FormattedResult), p_finalize(Result).
-executePuzzle(_) :- writeln('Error: could find result for puzzle data'), halt(7).
+executePuzzle(_) :- writeln('Error: could not find result for puzzle data'), halt(7).
 
 writeFirstResultLine(ResultLine, 0) :- p_notInlineResult, !, writeln(""), white(ResultLine, WhiteResultLine), write(WhiteResultLine).
 writeFirstResultLine(ResultLine, StartPos) :- cursorPosition(StartPos), white(ResultLine, WhiteResultLine), write(WhiteResultLine).

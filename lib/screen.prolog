@@ -83,6 +83,12 @@ char_screen("C", [[.,#,#,#,#,.],
                   [.,#,.,.,#,.],
                   [.,.,.,.,.,.]]) :- !.
 
+char_screen("O", [[#,#,#,#,#,#],
+                  [#,.,.,.,.,#],
+                  [#,.,.,.,.,#],
+                  [.,#,#,#,#,.],
+                  [.,.,.,.,.,.]]) :- !. /* Just a guess. Did not see any D yet */
+
 char_screen("E", [[#,#,#,#,#,#],
                   [#,.,#,.,.,#],
                   [#,.,#,.,.,#],
@@ -107,6 +113,12 @@ char_screen("H", [[#,#,#,#,#,#],
                   [#,#,#,#,#,#],
                   [.,.,.,.,.,.]]) :- !.
 
+char_screen("I", [[.,.,.,.,.,.],
+                  [#,.,.,.,.,#],
+                  [#,#,#,#,#,#],
+                  [#,.,.,.,.,#],
+                  [.,.,.,.,.,.]]) :- !. /* According to https://github.com/bsoyka/advent-of-code-ocr/blob/main/advent_of_code_ocr/characters.py */
+
 char_screen("J", [[.,.,.,.,#,.],
                   [.,.,.,.,.,#],
                   [#,.,.,.,.,#],
@@ -125,6 +137,12 @@ char_screen("L", [[#,#,#,#,#,#],
                   [.,.,.,.,.,#],
                   [.,.,.,.,.,.]]) :- !.
 
+char_screen("O", [[.,#,#,#,#,.],
+                  [#,.,.,.,.,#],
+                  [#,.,.,.,.,#],
+                  [.,#,#,#,#,.],
+                  [.,.,.,.,.,.]]) :- !. /* According to https://github.com/bsoyka/advent-of-code-ocr/blob/main/advent_of_code_ocr/characters.py */
+
 char_screen("P", [[#,#,#,#,#,#],
                   [#,.,.,#,.,.],
                   [#,.,.,#,.,.],
@@ -137,11 +155,17 @@ char_screen("R", [[#,#,#,#,#,#],
                   [.,#,#,.,.,#],
                   [.,.,.,.,.,.]]) :- !.
 
-char_screen("U", [[#,#,#,#,#,.],
-                  [.,.,.,.,.,#],
-                  [.,.,.,.,.,#],
-                  [#,#,#,#,#,.],
-                  [.,.,.,.,.,.]]) :- !.
+char_screen("S", [[.,#,#,.,.,#],
+                  [#,.,.,#,.,#],
+                  [#,.,.,#,.,#],
+                  [#,.,.,.,#,.],
+                  [.,.,.,.,.,.]]) :- !. /* According to https://github.com/bsoyka/advent-of-code-ocr/blob/main/advent_of_code_ocr/characters.py */
+
+char_screen("Y", [[#,#,.,.,.,.],
+                  [.,.,#,.,.,.],
+                  [.,.,.,#,#,#],
+                  [.,.,#,.,.,.],
+                  [.,.,.,.,.,.]]) :- !. /* According to https://github.com/bsoyka/advent-of-code-ocr/blob/main/advent_of_code_ocr/characters.py */
 
 char_screen("Z", [[#,.,.,.,#,#],
                   [#,.,.,#,.,#],

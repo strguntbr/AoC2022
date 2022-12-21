@@ -1,4 +1,6 @@
-:- include('lib/solve.prolog'). day(10). testResult(13140).
+ day(10). testResult(13140).
+
+:- use_module(lib/solve).
 
 process([], _, _, []).
 process([noop|Instructions], Cycle, X, [Signal|OtherSignals]) :-

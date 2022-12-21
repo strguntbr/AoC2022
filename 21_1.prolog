@@ -1,4 +1,6 @@
-:- include('lib/solve.prolog'). day(21). testResult(152).
+ day(21). testResult(152).
+
+:- use_module(lib/solve).
 
 result(_, Result) :- monkey("root", Result).
 

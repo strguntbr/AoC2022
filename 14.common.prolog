@@ -1,4 +1,6 @@
-:- include('lib/solve.prolog'). day(14).
+ day(14).
+
+:- use_module(lib/solve).
 
 assertSand(X, Y) :- \+ filled(X, Y, _), assert(filled(X, Y, sand)).
 

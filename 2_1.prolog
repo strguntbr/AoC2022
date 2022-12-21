@@ -1,4 +1,6 @@
-:- include('2.common.prolog'). testResult(15).
+ testResult(15).
+
+:- include('2.common.prolog').
 
 result(StrategyGuide, Score) :- maplist(score, StrategyGuide, Scores), sum_list(Scores, Score).
 

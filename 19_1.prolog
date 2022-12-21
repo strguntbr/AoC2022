@@ -1,4 +1,6 @@
-:- include('19.common.prolog'). testResult(33).
+ testResult(33).
+
+:- include('19.common.prolog').
 
 qualityLevel(Blueprint, QualityLevel) :-
   retractall(currentMaximum(_)), assert(currentMaximum(0)),

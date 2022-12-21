@@ -1,4 +1,6 @@
-:- include('11.common.prolog'). testResult(10605).
+ testResult(10605).
+
+:- include('11.common.prolog').
 
 relief(OldWorryLevel, NewWorryLevel) :- NewWorryLevel is div(OldWorryLevel, 3).
 

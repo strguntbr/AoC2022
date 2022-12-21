@@ -1,4 +1,6 @@
-:- include('lib/solve.prolog'). day(13).
+ day(13).
+
+:- use_module(lib/solve).
 
 comparesignal(A, A, eq) :- !.
 

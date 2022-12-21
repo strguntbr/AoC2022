@@ -1,4 +1,6 @@
-:- include('lib/solve.prolog'). day(4). testResult(2).
+ day(4). testResult(2).
+
+:- use_module(lib/solve).
 
 oneCleansAll(assign{first: [Start1, End1], second: [Start2, End2]}) :- Start1 =< Start2, End1 >= End2, !.
 oneCleansAll(assign{first: [Start1, End1], second: [Start2, End2]}) :- Start2 =< Start1, End2 >= End1.

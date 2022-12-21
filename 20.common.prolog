@@ -1,4 +1,6 @@
-:- include('lib/solve.prolog'). day(20).
+ day(20).
+
+:- use_module(lib/solve).
 
 initData(_, _, []).
 initData(I, L, [H|T]) :- Next is mod(I + 1, L), assert(number(I, H, Next)), initData(Next, L, T).

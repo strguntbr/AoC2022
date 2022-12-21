@@ -1,4 +1,6 @@
-:- include('lib/solve.prolog'). day(11). groupData.
+ day(11). groupData.
+
+:- use_module(lib/solve).
 
 incCounter(Id) :- counter(Id, C), NextC is C + 1, retract(counter(Id, _)), assert(counter(Id, NextC)).
 

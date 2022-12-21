@@ -1,4 +1,6 @@
-:- include('lib/solve.prolog'). day(15). testResult(26).
+ day(15). testResult(26).
+
+:- use_module(lib/solve).
 
 merge([S1,E1], [S2,E2], [S1,E1]) :- S1 =< S2, E1 >= E2, !.
 merge([S1,E1], [S2,E2], [S2,E2]) :- S2 =< S1, E2 >= E1, !.

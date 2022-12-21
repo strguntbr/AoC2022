@@ -1,3 +1,8 @@
+:- module(screen, [
+              string_screen/2,
+              string_screen/4
+          ]).
+
 /* Library to convert between a "screen" and a string. A screen is a series letters displayed in a 6x5 matrix each    */
 /* where the last row of the matrix is always empty. Thus the letter itself is 6x4 pixels.                            */
 /* This encoding seems to be used sometimes in Advent of Code puzzles to display the solution.                        */

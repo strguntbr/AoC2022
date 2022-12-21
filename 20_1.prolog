@@ -1,4 +1,6 @@
-:- include('20.common.prolog'). testResult(3).
+ testResult(3).
+
+:- include('20.common.prolog').
 
 result(Numbers, Coordinates) :- 
   initData(Numbers),

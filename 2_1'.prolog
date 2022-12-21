@@ -1,4 +1,6 @@
-:- include('lib/solve.prolog'). day(2). testResult(15).
+ day(2). testResult(15).
+
+:- use_module(lib/solve).
 
 scoreShape(rock, 0). scoreShape(paper, 1). scoreShape(scissor, 2).
 scoreOutcome(Opponent, Me, Score) :- scoreShape(Opponent, OpponentScore), scoreShape(Me, MyScore), Score is ((MyScore - OpponentScore + 1) mod 3).

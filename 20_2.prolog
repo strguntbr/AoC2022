@@ -1,4 +1,6 @@
-:- include('20.common.prolog'). testResult(1623178306).
+ testResult(1623178306).
+
+:- include('20.common.prolog').
 
 applyDecryptionKey(Number, DecryptedNumber) :- DecryptedNumber is Number * 811589153.
 

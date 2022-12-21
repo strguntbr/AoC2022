@@ -1,11 +1,12 @@
+day(10). testResult(["##..##..##..##..##..##..##..##..##..##..",
+                     "###...###...###...###...###...###...###.",
+                     "####....####....####....####....####....",
+                     "#####.....#####.....#####.....#####.....",
+                     "######......######......######......####",
+                     "#######.......#######.......#######....."]).
+:- use_module(lib/solve). 
+:- use_module(lib/screen).
 :- use_module(library(clpfd)).
-:- include('lib/solve.prolog'). day(10).
-testResult(["##..##..##..##..##..##..##..##..##..##..",
-            "###...###...###...###...###...###...###.",
-            "####....####....####....####....####....",
-            "#####.....#####.....#####.....#####.....",
-            "######......######......######......####",
-            "#######.......#######.......#######....."]).
 
 updateSpritePos(noop, Pos, Pos).
 updateSpritePos(add{v: V}, Pos, NextPos) :- NextPos is Pos + V.
@@ -41,7 +42,6 @@ data_line(noop, "noop").
 data_line(add{v: V}, Line) :- split_string(Line, " ", "", ["addx", Value]), number_string(V, Value).
 
 /* formatting / parsing of result */
-:- include('lib/screen.prolog').
 formatResult(ScreenLines, Text) :- maplist(string_chars, ScreenLines, Screen), string_screen(Text, Screen), !.
 
 /* fallback for missing letters */

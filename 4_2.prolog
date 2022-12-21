@@ -1,4 +1,6 @@
-:- include('lib/solve.prolog'). day(4). testResult(4).
+ day(4). testResult(4).
+
+:- use_module(lib/solve).
 
 between(X, [Start, End]) :- X >= Start, X =< End.
 overlap(assign{first: [Start1, _], second: Second}) :- between(Start1, Second), !.

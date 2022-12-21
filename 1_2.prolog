@@ -1,4 +1,6 @@
-:- include('lib/solve.prolog'). day(1). testResult(45000). groupData.
+ day(1). testResult(45000). groupData.
+
+:- use_module(lib/solve).
 
 /* top(List, Top, Remaining) where */
 /*   - List is a list */

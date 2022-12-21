@@ -1,4 +1,6 @@
-:- include('lib/solve.prolog'). day(12).
+ day(12).
+
+:- use_module(lib/solve).
 
 heightDiff("S", Neighbor, HeightDiff) :- !, HeightDiff is Neighbor - "a".
 heightDiff(Node, "E", HeightDiff) :- !, HeightDiff is "z" - Node.

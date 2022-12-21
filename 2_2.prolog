@@ -1,4 +1,6 @@
-:- include('2.common.prolog'). testResult(12).
+ testResult(12).
+
+:- include('2.common.prolog').
 
 mapPlay(round{opponent: Shape, outcome: draw}, round{opponent: Shape, me: Shape}).
 mapPlay(round{opponent: Opponent, outcome: lose}, round{opponent: Opponent, me: Me}) :- win(Opponent, Me).

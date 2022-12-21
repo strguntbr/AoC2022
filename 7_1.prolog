@@ -1,4 +1,6 @@
-:- include('7.common.prolog'). testResult(95437).
+ testResult(95437).
+
+:- include('7.common.prolog').
 
 matchinDir(Dir, Size, MaxSize) :- recursiveDirSize(Dir, Size), Size =< MaxSize.
 

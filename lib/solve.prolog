@@ -1,5 +1,13 @@
 /* the user has to define data_line(RAW_DATA, PARSED_DATA) which converts a string into parsed data */
+:- module(util, [
+              solve/0,
+              getData/1,
+              getTestData/1,
+              verifyTests/0,
+              printResultWithoutTest/0
+          ]).
 :- use_module(library(pio)).
+:- use_module(ansi).
 
 byteLines([])                     --> call(eos), !.
 byteLines([FirstLine|OtherLines]) --> byteLine(FirstLine), byteLines(OtherLines).
@@ -17,10 +25,6 @@ loadData_(Data, File) :- p_resetData, readLines(File, Lines), data_lines(Data, L
 
 loadData(Data, File, []) :- exists_file(File), !, loadData_(Data, File).
 loadData([], File, Error) :- format(string(Error), 'File ~w does not exist', [File]).
-loadTestData(Data) :- p_day(Day), fileForDay(Day, 'test', File), loadData(Data, File, Error), (
-    Error \= [] -> writeln(Error), fail
-    ; true
-  ).
 
 fileForDay(Day, Extension, File) :- format(atom(File), 'input/~w.~w', [Day, Extension]).
 
@@ -44,10 +48,11 @@ solve :- printResult.
 printResult :- verifyTests, printResultWithoutTest.
 printResultWithoutTest :- getData(Data), executePuzzle(Data).
 
-getData(Data) :- p_day(Day), fileForDay(Day, 'data', File), loadData(Data, File, Error), !, checkLoadError(Error).
-getData(_) :- writeln('Error: Could not load puzzle data'), halt(5).
-checkLoadError([]) :- !.
-checkLoadError(Error) :- format('Error: ~w', [Error]), halt(6).
+getTestData(Data) :- p_day(Day), fileForDay(Day, 'test', File), loadData(Data, File, Error), checkLoadError(Error, fail).
+getData(Data) :- p_day(Day), fileForDay(Day, 'data', File), loadData(Data, File, Error), !, checkLoadError(Error, []>>halt(6)).
+getData(_) :- write('Error: Could not load puzzle data'), halt(5).
+checkLoadError([], _) :- !.
+checkLoadError(Error, ErrorHandler) :- format('Error: ~w', [Error]), call(ErrorHandler).
 executePuzzle(Data) :- p_result(Data, Result), !, write('Result is '), p_formatResult(Result, FormattedResult), writeResult(FormattedResult), p_finalize(Result).
 executePuzzle(_) :- writeln('Error: could not find result for puzzle data'), halt(7).
 
@@ -119,56 +124,6 @@ noTests(Text) :-    green('NO TESTS FOUND', Text).
 testPassed(Text) :- green(' TEST  PASSED ', Text).
 testFailed(Text) :- red(' TEST  FAILED ', Text).
 testSkipped(Text) :- yellow(' TEST SKIPPED ', Text).
-
-/* ANSI XTERM utlitly methods */
-green(Text, ColoredText) :- isAnsiXterm, !, format(atom(ColoredText), '\033[0;32m~w\033[0m', [Text]).
-green(Text, Text).
-red(Text, ColoredText) :- isAnsiXterm, !, format(atom(ColoredText), '\033[0;31m~w\033[0m', [Text]).
-red(Text, Text).
-yellow(Text, ColoredText) :- isAnsiXterm, !, format(atom(ColoredText), '\033[0;33m~w\033[0m', [Text]).
-yellow(Text, Text).
-white(Text, ColoredText) :- isAnsiXterm, !, format(atom(ColoredText), '\033[1;37m~w\033[0m', [Text]).
-white(Text, Text).
-
-greenbg(Text, ColoredText) :- isAnsiXterm, !, format(atom(ColoredText), '\033[30m\033[42m~w\033[0m', [Text]).
-greenbg(Text, Text).
-redbg(Text, ColoredText) :- isAnsiXterm, !, format(atom(ColoredText), '\033[30m\033[41m~w\033[0m', [Text]).
-redbg(Text, Text).
-yellowbg(Text, ColoredText) :- isAnsiXterm, !, format(atom(ColoredText), '\033[30m\033[43m~w\033[0m', [Text]).
-yellowbg(Text, Text).
-
-moveCursor(Distance, Direction) :- isAnsiXterm -> moveCursor_(Distance, Direction) ; true.
-moveCursor_(0, _) :- !.
-moveCursor_(Distance, 'up') :- format('\033[~dA', [Distance]).
-moveCursor_(Distance, 'down') :- format('\033[~dB', [Distance]).
-moveCursor_(Distance, 'right') :- format('\033[~dC', [Distance]).
-moveCursor_(Distance, 'left') :- format('\033[~dD', [Distance]).
-
-cursorPosition(Position) :-
-  isAnsiXterm,
-  csi('[6n'), readResponse(Response), !,
-  string_codes(ResponseStr, Response),
-  split_string(ResponseStr, ";", "", [_, PosStr]),
-  number_codes(Position, PosStr).
-cursorPosition(0).
-
-readResponse(Response) :-
-  get_single_char(C),
-  (
-    data(C) -> readResponse(ResponseN), Response = [C|ResponseN] 
-    ; startCode(C) -> readResponse(Response)
-    ; Response = []
-  ).
-
-data(C) :- digit(C) ; semicolon(C).
-digit(C) :- between(48, 57, C).
-semicolon(59).
-startCode(27). startCode(91).
-
-csi(Sequence) :- isAnsiXterm -> format('\033~w', [Sequence]) ; true.
-csi(Target, Sequence) :- isAnsiXterm -> format(Target, '\033~w', [Sequence]) ; format(Target, '', []).
-
-isAnsiXterm :- stream_property(current_output, tty(true)), current_prolog_flag(color_term, true).
 
 /* proxies for methods defined outside this  file */
 p_day(Day) :- day(Day).

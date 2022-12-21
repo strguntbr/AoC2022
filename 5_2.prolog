@@ -1,3 +1,5 @@
-:- include('5.common.prolog'). testResult("MCD").
+ testResult("MCD").
+
+:- include('5.common.prolog').
 
 reorderForPush(Crates, Crates).

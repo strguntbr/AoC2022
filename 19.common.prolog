@@ -1,4 +1,6 @@
-:- include('lib/solve.prolog'). day(19).
+ day(19).
+
+:- use_module(lib/solve).
 
 assertCurrentMaximum(CurBest) :- currentMaximum(LastBest), (LastBest >= CurBest ; (retractall(currentMaximum(_)), assert(currentMaximum(CurBest)))).
 

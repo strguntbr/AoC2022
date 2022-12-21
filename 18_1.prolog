@@ -1,3 +1,5 @@
-:- include('18.common.prolog'). testResult(64).
+ testResult(64).
+
+:- include('18.common.prolog').
 
 result(_, ExposedSides) :- countExposedSides(ExposedSides).

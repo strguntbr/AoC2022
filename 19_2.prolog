@@ -1,4 +1,6 @@
-:- include('19.common.prolog'). testResult(3472).
+ testResult(3472).
+
+:- include('19.common.prolog').
 
 geodes(Blueprint, Time, Geodes) :-
   retractall(currentMaximum(_)), assert(currentMaximum(0)),

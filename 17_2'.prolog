@@ -2,7 +2,9 @@
 /* This does not seem to be necessary when skipping the cycles at the end (so that you directly end up at the  */
 /* last rock). I have no idea though why this works, so I also keep this solution which I regard as the proper */
 /* (understandable ;) - but slightly slower - one...                                                           */
-:- include('lib/solve.prolog'). day(17). testResult(1514285714288).
+ day(17). testResult(1514285714288).
+
+:- use_module(lib/solve).
 
 disjoint(Set1, Set2) :- foreach(member(X, Set1), \+ member(X, Set2)).
 getHeight(TowerOrRock, Height) :- aggregate_all(max(X), member([X,_], TowerOrRock), H), Height is H + 1.

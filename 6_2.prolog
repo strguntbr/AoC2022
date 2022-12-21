@@ -1,4 +1,6 @@
-:- include('lib/solve.prolog'). day(6). testResult(19). testResult('test1', 23). testResult('test2', 23). testResult('test3', 29). testResult('test4', 26).
+ testResult(19). testResult('test1', 23). testResult('test2', 23). testResult('test3', 29). testResult('test4', 26).
+
+:- use_module(lib/solve). day(6).
 
 distinct([]).
 distinct([H|T]) :- \+ member(H, T), distinct(T).

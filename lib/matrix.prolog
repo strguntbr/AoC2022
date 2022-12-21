@@ -1,3 +1,12 @@
+:- module(matrix, [
+              row/2,
+              nthRow1/3,
+              nthRow0/3,
+              col/2,
+              nthCol1/3,
+              nthCol0/3
+          ]).
+
 row(Row, Matrix) :- member(Row, Matrix).
 nthRow1(Index, Matrix, Row) :- nth1(Index, Matrix, Row).
 nthRow0(Index, Matrix, Row) :- nth0(Index, Matrix, Row).

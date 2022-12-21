@@ -1,4 +1,6 @@
-:- include('lib/solve.prolog'). day(7).
+ day(7).
+
+:- use_module(lib/solve).
 
 recursiveSize(Node, Size) :- node(Node, _, NodeSize), aggregate_all(sum(ChildSize),  recursiveSize([_|Node], ChildSize), ChildSizes), Size is NodeSize + ChildSizes.
 recursiveDirSize(Dir, Size) :- node(Dir, dir, _), recursiveSize(Dir, Size).

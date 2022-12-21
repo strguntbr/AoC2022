@@ -1,4 +1,6 @@
-:- include('lib/solve.prolog'). day(3). testResult(157).
+ day(3). testResult(157).
+ 
+:- use_module(lib/solve).
 
 priority(Item, Priority) :- Item >= "a", Item =< "z", Priority is Item - "a" + 1.
 priority(Item, Priority) :- Item >= "A", Item =< "Z", Priority is Item - "A" + 27.

@@ -1,4 +1,6 @@
-:- include('lib/solve.prolog'). day(21). testResult(301).
+ day(21). testResult(301).
+
+:- use_module(lib/solve).
 :- use_module(library(clpq)).
 
 result(Equations, Result) :-

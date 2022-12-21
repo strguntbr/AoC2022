@@ -1,4 +1,6 @@
-:- include('16.common.prolog'). testResult(1707).
+ testResult(1707).
+
+:- include('16.common.prolog').
 
 result(Valves, ReleasedPressure) :- hull(Valves), 
   findAllPaths([], "AA", 26, Paths),

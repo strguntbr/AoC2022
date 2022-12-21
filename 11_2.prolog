@@ -1,4 +1,6 @@
-:- include('11.common.prolog'). testResult(2713310158).
+ testResult(2713310158).
+
+:- include('11.common.prolog').
 
 relief(OldWorryLevel, NewWorryLevel) :- maxWorryLevel(MaxWorryLevel), NewWorryLevel is mod(OldWorryLevel, MaxWorryLevel).
 

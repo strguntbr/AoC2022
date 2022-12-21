@@ -1,4 +1,6 @@
-:- include('lib/solve.prolog'). day(5). groupData.
+ day(5). groupData.
+
+:- use_module(lib/solve).
 :- use_module(library(clpfd)).
 
 concatAll([], "").

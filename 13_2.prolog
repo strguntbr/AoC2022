@@ -1,4 +1,6 @@
-:- include('13.common.prolog'). testResult(140).
+ testResult(140).
+
+:- include('13.common.prolog').
 
 smaller(Signals, X, Y) :-
   (nonvar(Y) ; member(Y, Signals)),

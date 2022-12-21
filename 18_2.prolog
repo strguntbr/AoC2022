@@ -1,4 +1,6 @@
-:- include('18.common.prolog'). testResult(58).
+ testResult(58).
+
+:- include('18.common.prolog').
 
 cube([X,Y,Z]) :- cube(X, Y, Z).
 outside([MinX,MaxX], [MinY,MaxY], [MinZ, MaxZ], [X,Y,Z]) :- X =< MinX ; X >= MaxX ; Y =< MinY ; Y >= MaxY ; Z =< MinZ ; Z >= MaxZ.

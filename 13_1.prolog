@@ -1,4 +1,6 @@
-:- include('13.common.prolog'). groupData. testResult(13).
+ groupData. testResult(13).
+
+:- include('13.common.prolog').
 
 properSignalSum([], _, 0).
 properSignalSum([[A,B]|T], I, Sum) :-

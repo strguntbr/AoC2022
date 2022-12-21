@@ -1,4 +1,6 @@
-:- include('lib/solve.prolog'). day(9).
+ day(9).
+
+:- use_module(lib/solve).
 
 visit(X, Y) :- retractall(visited(X, Y)), assert(visited(X, Y)).
 init(Knots, Rope) :- retractall(visited(_, _)), visit(0, 0), length(Rope, Knots), maplist(=([0,0]), Rope).

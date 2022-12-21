@@ -1,4 +1,6 @@
-:- include('lib/solve.prolog'). day(15). testResult(56000011).
+ day(15). testResult(56000011).
+
+:- use_module(lib/solve).
 
 pick2([H|T], X1, X2) :- (member(X2,T), X1 = H) ; pick2(T, X1, X2).
 

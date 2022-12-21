@@ -1,5 +1,7 @@
-:- include('lib/solve.prolog'). day(8). testResult(21).
-:- include('lib/matrix.prolog').
+ day(8). testResult(21).
+
+:- use_module(lib/solve).
+:- use_module(lib/matrix).
 
 allSmaller([], _).
 allSmaller([H|T], X) :- H < X, allSmaller(T, X).

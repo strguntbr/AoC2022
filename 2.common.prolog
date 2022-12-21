@@ -1,4 +1,6 @@
-:- include('lib/solve.prolog'). day(2).
+ day(2).
+
+:- use_module(lib/solve).
 
 win(rock, scissor). win(scissor, paper). win(paper, rock).
 

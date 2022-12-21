@@ -1,4 +1,6 @@
-:- include('lib/solve.prolog'). day(18).
+ day(18).
+
+:- use_module(lib/solve).
 
 neighbor([X,Y,Z], [XN,Y,Z]) :- XN is X - 1 ; XN is X + 1. 
 neighbor([X,Y,Z], [X,YN,Z]) :- YN is Y - 1 ; YN is Y + 1. 

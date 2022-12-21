@@ -1,4 +1,6 @@
-:- include('lib/solve.prolog'). day(17).
+ day(17).
+
+:- use_module(lib/solve).
 
 disjoint(Set1, Set2) :- foreach(member(X, Set1), \+ member(X, Set2)).
 getHeight(TowerOrRock, Height) :- aggregate_all(max(X), member([X,_], TowerOrRock), H), Height is H + 1.

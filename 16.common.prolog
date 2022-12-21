@@ -1,4 +1,6 @@
-:- include('lib/solve.prolog'). day(16).
+ day(16).
+
+:- use_module(lib/solve).
 
 addPressure(OldPath, Pressure, path{pressure:NewPressure, valves:OldPath.valves}) :- NewPressure is OldPath.pressure + Pressure.
 

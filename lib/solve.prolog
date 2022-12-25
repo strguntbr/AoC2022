@@ -53,7 +53,7 @@ getData(Data) :- p_day(Day), fileForDay(Day, 'data', File), loadData(Data, File,
 getData(_) :- write('Error: Could not load puzzle data'), halt(5).
 checkLoadError([], _) :- !.
 checkLoadError(Error, ErrorHandler) :- format('Error: ~w', [Error]), call(ErrorHandler).
-executePuzzle(Data) :- p_result(Data, Result), !, write('Result is '), p_formatResult(Result, FormattedResult), writeResult(FormattedResult), p_finalize(Result).
+executePuzzle(Data) :- p_postProcessData(Data, PostprocessedData), p_result(PostprocessedData, Result), !, write('Result is '), p_formatResult(Result, FormattedResult), writeResult(FormattedResult), p_finalize(Result).
 executePuzzle(_) :- writeln('Error: could not find result for puzzle data'), halt(7).
 
 writeFirstResultLine(ResultLine, 0) :- p_notInlineResult, !, writeln(""), white(ResultLine, WhiteResultLine), write(WhiteResultLine).
@@ -82,7 +82,7 @@ getTestData(File, TestData) :- loadData(TestData, File, Error), !, checkTestLoad
 getTestData(File, _) :- testFailed(Status), format('[~w] Could not load test data ~w', [Status, File]), halt(1).
 checkTestLoadError([]) :- !.
 checkTestLoadError(Error) :- testFailed(Status), format('[~w] ~w', [Status, Error]), halt(2).
-executeTest(File, TestData, ExpectedResult) :- p_result(TestData, TestResult), !, verifyResult(File, TestResult, ExpectedResult).
+executeTest(File, TestData, ExpectedResult) :- p_postProcessData(TestData, PostprocessedData), p_result(PostprocessedData, TestResult), !, verifyResult(File, TestResult, ExpectedResult).
 executeTest(File, _, _) :- testFailed(Status), format('[~w] No solution for test data ~w found', [Status, File]), halt(3).
 verifyResult(_, TestResult, TestResult) :- !.
 verifyResult(File, WrongResult, ExpectedResult) :- testFailed(Status), format("[~w] Test ~w returned ", [Status, File]), writeErrorResults(ExpectedResult, WrongResult), halt(4).
@@ -128,7 +128,8 @@ testSkipped(Text) :- yellow(' TEST SKIPPED ', Text).
 /* proxies for methods defined outside this  file */
 p_day(Day) :- day(Day).
 p_resetData :- current_predicate(resetData/0) -> resetData ; true.
-p_data_line(Data, Line) :- data_line(Data, Line).
+p_postProcessData(Data, PostprocessedData) :- current_predicate(postProcessData/2) -> postProcessData(Data, PostprocessedData) ; PostprocessedData=Data.
+p_data_line(Data, Line) :- current_predicate(data_line/2) -> data_line(Data, Line) ; Data=Line.
 p_result(Data, Result) :- result(Data, Result).
 p_formatResult(Result, FormattedResult) :- current_predicate(formatResult/2), !, formatResult(Result, FormattedResult). p_formatResult(Result, Result).
 p_testResult(ExpectedResult) :- current_predicate(testResult/1), testResult(ExpectedResult).
